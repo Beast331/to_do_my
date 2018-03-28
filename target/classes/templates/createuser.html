@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+
+<html xmlns:th="http://www.thymeleaf.org"> 
+<!--to connect to the server side software that enables connecting of html and java-->
+<head>
+<title>Login</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<!--setting http tag for website, setting content type and charset-->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!--defining links between html page and external sources-->
+</head>
+    <body>
+    <div class = "container"
+    
+        <form th:action="@{/createuser}" method="post">
+            <br><div><label> User Name: <input type="text" name="username"/> </label></div>
+            <br><div><label> Password : <input type="password" name="password"/> </label></div>
+            <div><input type="submit" value="Create Account."/></div></div>
+            
+        </form>
+    </body>
+</html>

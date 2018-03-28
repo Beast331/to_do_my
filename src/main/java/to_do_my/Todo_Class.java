@@ -7,12 +7,43 @@ public class Todo_Class {
 	public Integer id;
 	public String name;
 	private List<Todo_Task> tasks = new ArrayList<Todo_Class.Todo_Task>();
-	
+	public Integer userId;
 	public Todo_Class()
 	{
 		
 	}
 	
+	
+	public Integer getId() {
+		return id;
+	}
+
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+
+	public String getName() {
+		return name;
+	}
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+
+
 	public Todo_Class(int id, String name)
 	{
 		this.id = id;

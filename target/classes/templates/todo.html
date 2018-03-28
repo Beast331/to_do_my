@@ -23,8 +23,17 @@
 		<div class="row">
 			<div class="col-md-4">
 				<ul class="list-group">
+	
 					<li th:each="task : ${todo.tasks}" class="list-group-item"><span
-						th:text="${task.name}"></span></li>
+						th:text="${task.name}"></span></li><!--form th:action="@{'/deletetodotask/' + ${id}}" th:object="${dto}" method="post">
+        <p><input type="submit" value="Delete Task"/> </p>
+    </form-->
+						<br><br>
+    <form th:action="@{'/createtodotask/' + ${id}}" th:object="${dto}" method="post">
+    	<p>Create a new Task: <input type="text" name = "name"/></p>
+        <p><input type="submit" value="Submit" /> </p>
+    </form>
+			
 				</ul>
 			</div>
 		</div>
