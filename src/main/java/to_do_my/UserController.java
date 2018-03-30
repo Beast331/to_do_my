@@ -7,7 +7,8 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 
@@ -23,20 +24,46 @@ public class UserController {
 	@Autowired
 	UserRepository userRepo;
 	
+	static String userCreated;
+	
+	@GetMapping("/login")
+	public String login(Model m) {
+		m.addAttribute("userCreated", userCreated);
+		userCreated = null;
+		return "login";
+	}
 
 
 	
 	@PostMapping ("/createuser")
 	public String createuser(@Valid UserDTO user)
 	{
+		if (user.getUsername() != "")
 		for (int i = 0; i < returnAllUsers().size(); i++)
 		{
 			if (user.getUsername().equalsIgnoreCase(returnAllUsers().get(i).getUsername()))
 			{
+				userCreated = "Sorry, that user name has already been taken.";
 				return "redirect:/login";
 			}
 		}
+		if (user.getName() == "")
+		{
+			userCreated = "Please enter your name! Try again.";
+			return "redirect:/login";
+		}
+		else if (user.getUsername() == "")
+		{
+			userCreated = "Please enter a username! Try again.";
+			return "redirect:/login";
+		}
+		else if (user.getPassword() == "")
+		{
+			userCreated = "You need a password! Try again.";
+			return "redirect:/login";
+		}
 		userRepo.save(returnUser(user));
+		userCreated = "Account successfully created! Welcome to Kailash's To-Do Service. Please log in.";
 		return "redirect:/login";
 	}
 	

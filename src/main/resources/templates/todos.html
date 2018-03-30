@@ -1,8 +1,20 @@
-<!DOCTYPE HTML>
-
 <html xmlns:th="http://www.thymeleaf.org"> 
-<!--to connect to the server side software that enables connecting of html and java-->
 <head>
+  <style>
+.parallax {
+    /* The image used */
+    background-image: url("http://i67.tinypic.com/zikns6.jpg");
+
+    /* Set a specific height */
+    height: 500px;
+
+    /* Create the parallax scrolling effect */
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+</style>
 <title>TODOs</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <!--setting http tag for website, setting content type and charset-->
@@ -13,37 +25,54 @@
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <!--defining links between html page and external sources-->
+<style>
+  .test{
+    width: 500px;
+    height: 0px;
+  }
+  </style>
 </head>
-<body>
-	<div class="container">
+
+ <body class="parallax">
+	<div class="container-fluid">
 	<div>
 			<form th:action="@{/logout}" method="post">
 				<br><input type="submit" class="btn btn-success" value="Sign Out" />
 			</form>
 		</div>
+		<h4><br><br>Welcome, <span th:text="${username}"></span>!</h4>
 		<div class="row">
 			<h3>
-				<br>TO-DO Lists <small class="text-muted"> - simple and easy to manage</small>
+				<br><br>&nbsp;&nbsp;TO-DO Lists
 			</h3>
 		</div>
 
 		<div class="row">
 			<div class="col-md-4">
+			<form th:action="@{/createtodos}"  method="post">
+    	<h5><p><br>Create a new To-Do List: <input type="text" name = "name"/></p></h5>
+        <p><input type="submit" value="Submit" class = "btn btn-primary"/> </p>
+    </form>
 				<ul class="list-group">
     
-    <form th:action="@{/createtodos}"  method="post">
-    	<p>Create a new To-Do List: <input type="text" name = "name"/></p>
-        <p><input type="submit" value="Submit" /> </p>
-    </form>
-					<br><li th:each="todo:${todos}" class="list-group-item"><a
-						th:href="@{'/todos/' + ${todo.id}}"><span
-							th:text="${todo.name}"></span></a></li>
+    <div class="test">
+					<li th:each="todo:${todos}" class="list-group-item">
+					<a
+						th:href="@{'/todos/' + ${todo.id}}" ><span 
+							th:text="${todo.name}"></a>
+								<form th:action="@{'/edit/'+${todo.id}}"
+							method="get" style="margin-left:375px;">
+							<input type="submit" class="btn btn-info" value="Edit" />
+						</form>
+							<form style = "margin-left:375px;" 
+							th:action="@{'/deletetodos/'+${todo.id}}" method = "post">
+							<input class = "btn btn-danger" type="submit" value="Delete" /> </form>
+						</span>
+							</li> </div>
 				</ul>
 			</div>
 		</div>
 	</div>
-	
-
 </body>
 </html>
 

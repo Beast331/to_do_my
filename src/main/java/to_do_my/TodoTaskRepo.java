@@ -7,5 +7,6 @@ public interface TodoTaskRepo extends
 JpaRepository<TodoTask, Integer>, 
 JpaSpecificationExecutor<TodoTask>
 {
-
+	TodoTask findByTodo(Todo t);
+	void deleteByTodo_id(int id);
 }

@@ -1,18 +1,9 @@
 <html xmlns:th="http://www.thymeleaf.org"> 
 <head>
-  <style>
-.parallax {
-    /* The image used */
-    background-image: url("http://i67.tinypic.com/zikns6.jpg");
-
-    /* Set a specific height */
-    height: 500px;
-
-    /* Create the parallax scrolling effect */
-    background-attachment: fixed;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
+<style>
+body
+{
+  background-color: #33cccc;
 }
 </style>
 <title>TODOs</title>
@@ -31,9 +22,24 @@
     height: 0px;
   }
   </style>
+    <style>
+.parallax {
+    /* The image used */
+    background-image: url("http://i67.tinypic.com/zikns6.jpg");
+
+    /* Set a specific height */
+    height: 500px;
+
+    /* Create the parallax scrolling effect */
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+</style>
 </head>
 
- <body class="parallax">
+<body class="parallax">
 	<div class="container-fluid">
 	<div>
 			<form th:action="@{/logout}" method="post">
@@ -43,30 +49,26 @@
 		<h4><br><br>Welcome, <span th:text="${username}"></span>!</h4>
 		<div class="row">
 			<h3>
-				<br><br>&nbsp;&nbsp;TO-DO Lists
+				&nbsp;&nbsp;TO-DO Lists <small class="text-muted"> - simple and easy to manage</small>
 			</h3>
 		</div>
 
 		<div class="row">
 			<div class="col-md-4">
-			<form th:action="@{/createtodos}"  method="post">
-    	<h5><p><br>Create a new To-Do List: <input type="text" name = "name"/></p></h5>
-        <p><input type="submit" value="Submit" class = "btn btn-primary"/> </p>
-    </form>
 				<ul class="list-group">
     
     <div class="test">
 					<li th:each="todo:${todos}" class="list-group-item">
-					<a
-						th:href="@{'/todos/' + ${todo.id}}" ><span 
-							th:text="${todo.name}"></a>
-								<form th:action="@{'/edit/'+${todo.id}}"
-							method="get" style="margin-left:375px;">
-							<input type="submit" class="btn btn-info" value="Edit" />
-						</form>
-							<form style = "margin-left:375px;" 
-							th:action="@{'/deletetodos/'+${todo.id}}" method = "post">
-							<input class = "btn btn-danger" type="submit" value="Delete" /> </form>
+					<div th:if="${todo.name} ne ${editName}">
+					<span th:text="${todo.name}">
+								</div>
+								<div th:unless="${todo.name} ne ${editName}">
+								<form th:action="@{'/editedTask/'+${todo.id}}" method="post" 
+								>
+            <div><input type="text" name="name" th:value = "${editName}" size="35"> </label></div>
+             <p><input type="submit" class = "btn btn-primary" value="Save" style="margin-left:400px;"/> </p>
+            </div>
+        </form>
 						</span>
 							</li> </div>
 				</ul>

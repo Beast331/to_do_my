@@ -1,6 +1,11 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+<style>
+div { margin-left: 0px;
+margin-right: 0px;
+}
+</style>
 <title>TODOs</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
@@ -10,33 +15,88 @@
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<style>
+  .test{
+    width: 600px;
+    height: 10px;
+  }
+  </style>
+  <style>
+.parallax {
+    /* The image used */
+    background-image: url("http://i67.tinypic.com/24nqukx.jpg");
 
+    /* Set a specific height */
+    height: 500px;
+
+    /* Create the parallax scrolling effect */
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+</style>
 </head>
-<body>
-	<div class="container">
+<body class="parallax">
+	<div class="container-fluid">
 		<div class="row">
-			<h3>
-				TODO > <span th:text="${todo.name}"></span>
+			<br><br><form th:action="@{'/todos'}" method="get">
+        <p><input type="submit" value="Return" class = "btn btn-info"/> </p>
+    </form>
+				<h3><br>TODO > <span th:text="${todo.name}"></span>
 			</h3>
 		</div>
 
 		<div class="row">
 			<div class="col-md-4">
 				<ul class="list-group">
-	
-					<li th:each="task : ${todo.tasks}" class="list-group-item"><span
-						th:text="${task.name}"></span></li><!--form th:action="@{'/deletetodotask/' + ${id}}" th:object="${dto}" method="post">
-        <p><input type="submit" value="Delete Task"/> </p>
-    </form-->
+	<br>
 						<br><br>
     <form th:action="@{'/createtodotask/' + ${id}}" th:object="${dto}" method="post">
     	<p>Create a new Task: <input type="text" name = "name"/></p>
-        <p><input type="submit" value="Submit" /> </p>
+        <p><input type="submit" value="Submit" class="btn btn-primary"/> </p>
     </form>
-			
+			<div class="test">
+<li th:each="task : ${todo.tasks}" class="list-group-item">
+						
+						<div th:if="${task.completed}">
+							<s th:text="${task.name}"></s>
+									<form th:action="@{'/edit/'+${todo.id}+'/'+${task.id}}"
+							method="get" style="margin-left:375px;">
+							<input type="submit" class="btn btn-info" value="Edit" />
+						</form>
+							<br><form th:action="@{'/deletetodotask/'+${todo.id}+'/'+${task.id}}"
+							method="post" style="margin-left:375px;">
+							<input type="submit" class="btn btn-danger" value="Delete" />
+						</form>
+					
+							<br><form th:action="@{'/todos/'+${todo.id}+'/tasks/'+${task.id}}"
+							method="post" style="margin-left:375px;">
+							<input type="submit" class="btn btn-primary" value="Set As Incomplete" />
+						</form>
+						
+						</div> <!-- ELSE -->
+						<div th:unless="${task.completed}">
+							<span th:text="${task.name}"></span>
+							<form th:action="@{'/edit/'+${todo.id}+'/'+${task.id}}"
+							method="get" style="margin-left:375px;">
+							<input type="submit" class="btn btn-info" value="Edit" />
+						</form>
+								<br><form th:action="@{'/deletetodotask/'+${todo.id}+'/'+${task.id}}"
+							method="post" style="margin-left:375px;">
+							<input type="submit" class="btn btn-danger" value="Delete" />
+						</form>
+							<br><form th:action="@{'/todos/'+${todo.id}+'/tasks/'+${task.id}}"
+							method="post" style="margin-left:375px;">
+							<input type="submit" class="btn btn-primary" value="Set As Complete" />
+						</form>
+						
+						</div>
+					</li></div>
 				</ul>
 			</div>
 		</div>
 	</div>
 </body>
 </html>
+

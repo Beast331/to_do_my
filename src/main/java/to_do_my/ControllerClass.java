@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,7 +22,6 @@ import to_do_my.Todo_Class.Todo_Task;
 
 @Controller
 public class ControllerClass {
-	
 	@Autowired
 	TodoRepo todoRepo;
 	
@@ -32,9 +33,9 @@ public class ControllerClass {
 	
 	@GetMapping("/")
 	public String home(Model m) {
-		m.addAttribute("user", new UserDTO());
 		return "redirect:/login";
 	}
+
 	
 
 	@GetMapping("/greeting")
@@ -49,9 +50,91 @@ public class ControllerClass {
 	@GetMapping("/todos")
 	public String todos(Model m)
 	{
+		UserDetails userDetails =
+				 (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		m.addAttribute("username", userRepo.findByUsername(userDetails.getUsername()).getName());
 		m.addAttribute("todos", getTodos());
 		m.addAttribute("taskDTOObject", new Todo_Class());
 		return "todos";
+	}
+	
+	@Transactional
+	@PostMapping("/deletetodos/{todoId}")
+	public String removetodos(@PathVariable int todoId, Todo_Class todo, Model m)
+	{
+			ttRepo.deleteByTodo_id(todoId);
+			todoRepo.deleteById(todoId);
+		return "redirect:/todos";
+	}
+	
+	@Transactional
+	@PostMapping("/deletetodotask/{todoId}/{todoTaskId}")
+	public String removetodotask(@PathVariable int todoId, @PathVariable int todoTaskId, Todo_Class todo, Model m)
+	{
+		ttRepo.deleteById(todoTaskId);
+		
+		return "redirect:/todos/{todoId}";
+	}
+	
+	@PostMapping("/todos/{todoId}/tasks/{taskId}")
+	public String setCompleted(@PathVariable int todoId, @PathVariable int taskId)
+	{
+		Optional <TodoTask> opt = ttRepo.findById(taskId);
+		if (!opt.isPresent())
+			return "/todos/{todoId}";
+			TodoTask to = opt.get();
+			if (to.isCompleted())
+				to.setCompleted(false);
+			else
+				to.setCompleted(true);
+		ttRepo.save(to);
+		return "redirect:/todos/{todoId}";
+	}
+	
+	@GetMapping("/edit/{todoId}/{taskId}")
+	public String editPage(@PathVariable int todoId, @PathVariable int taskId, Model m)
+	{
+		String name = ttRepo.findById(taskId).get().getName();
+		Todo_Class todo = getTodoById(todoId);
+		m.addAttribute("dto", new Todo_Task());
+		m.addAttribute("todo", todo);
+		m.addAttribute("editName", name);
+		print(name);
+		return "edit";
+	}
+	
+	@PostMapping("/editedTask/{todoId}/{taskId}")
+	public String saveEdit(Todo_Task todo, @PathVariable int todoId, @PathVariable int taskId)
+	{
+		TodoTask t = ttRepo.findById(taskId).get();
+		t.setName(todo.getName());
+		ttRepo.save(t);
+		return "redirect:/todos/{todoId}";
+	}
+	
+	@GetMapping("/edit/{todoId}")
+	public String editPage(@PathVariable int todoId, Model m)
+	{
+		String name = todoRepo.findById(todoId).get().getName();
+		UserDetails userDetails =
+				 (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		m.addAttribute("editName", name);
+		m.addAttribute("username", userRepo.findByUsername(userDetails.getUsername()).getName());
+		m.addAttribute("todos", getTodos());
+		m.addAttribute("taskDTOObject", new Todo_Class());
+		return "editTodo";
+	}
+	private void print(String editName)
+	{
+		System.out.println(editName);
+	}
+	@PostMapping("/editedTask/{todoId}")
+	public String saveEdit(Todo_Class todo, @PathVariable int todoId)
+	{
+		Todo t = todoRepo.findById(todoId).get();
+		t.setName(todo.getName());
+		todoRepo.save(t);
+		return "redirect:/todos";
 	}
 	
 	private List<Todo_Class> getTodos()
